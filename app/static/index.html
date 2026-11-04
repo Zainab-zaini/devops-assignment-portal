@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assignment Portal | Student Dashboard</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-icon">A</div>
+            <div>
+                <h2>Assignment Portal</h2>
+                <span>Academic Submission System</span>
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <span class="status-dot"></span>
+            System Online
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="welcome">
+            <div>
+                <span class="eyebrow">STUDENT WORKSPACE</span>
+                <h1>Assignment Management</h1>
+                <p>
+                    Submit your academic work and track
+                    your submission records in one place.
+                </p>
+            </div>
+
+            <div class="date-card">
+                <span>PORTAL STATUS</span>
+                <strong>Active</strong>
+            </div>
+        </section>
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <span class="stat-label">Total Submissions</span>
+                <h2 id="totalCount">0</h2>
+                <span class="stat-description">
+                    Recorded assignments
+                </span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">System Status</span>
+                <h2 class="online">Online</h2>
+                <span class="stat-description">
+                    Backend operational
+                </span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Storage</span>
+                <h2>SQLite</h2>
+                <span class="stat-description">
+                    Persistent database
+                </span>
+            </div>
+
+        </section>
+
+        <section class="content-grid">
+
+            <div class="panel form-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">NEW ENTRY</span>
+                        <h2>Submit Assignment</h2>
+                        <p>Complete all fields below.</p>
+                    </div>
+
+                    <div class="heading-icon">+</div>
+                </div>
+
+                <form id="submissionForm">
+
+                    <div class="form-group">
+                        <label for="student_name">
+                            Student Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="student_name"
+                            name="student_name"
+                            placeholder="Enter your full name"
+                            required
+                            minlength="2"
+                            maxlength="100"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registration_number">
+                            Registration Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="registration_number"
+                            name="registration_number"
+                            placeholder="e.g. FA24-BCS-001"
+                            required
+                            minlength="3"
+                            maxlength="30"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assignment_title">
+                            Assignment Title
+                        </label>
+
+                        <input
+                            type="text"
+                            id="assignment_title"
+                            name="assignment_title"
+                            placeholder="Enter assignment title"
+                            required
+                            minlength="3"
+                            maxlength="150"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="submission_url">
+                            Submission URL
+                        </label>
+
+                        <input
+                            type="url"
+                            id="submission_url"
+                            name="submission_url"
+                            placeholder="https://github.com/your-project"
+                            required
+                        >
+
+                        <small>
+                            Provide a valid HTTP or HTTPS link.
+                        </small>
+                    </div>
+
+                    <div id="message" class="message"></div>
+
+                    <button
+                        type="submit"
+                        id="submitButton"
+                        class="submit-btn"
+                    >
+                        Submit Assignment
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel info-panel">
+
+                <span class="eyebrow">SUBMISSION GUIDELINES</span>
+
+                <h2>Before you submit</h2>
+
+                <p>
+                    Ensure that your information is accurate
+                    before submitting your academic work.
+                </p>
+
+                <div class="guideline">
+                    <span class="check">✓</span>
+                    <div>
+                        <strong>Complete Information</strong>
+                        <p>All four submission fields are mandatory.</p>
+                    </div>
+                </div>
+
+                <div class="guideline">
+                    <span class="check">✓</span>
+                    <div>
+                        <strong>Valid Submission Link</strong>
+                        <p>Only HTTP and HTTPS URLs are accepted.</p>
+                    </div>
+                </div>
+
+                <div class="guideline">
+                    <span class="check">✓</span>
+                    <div>
+                        <strong>Database Record</strong>
+                        <p>Valid submissions are stored persistently.</p>
+                    </div>
+                </div>
+
+                <div class="notice">
+                    <strong>Important</strong>
+                    <p>
+                        Verify your submission URL before
+                        clicking the submit button.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="panel records-panel">
+
+            <div class="records-header">
+                <div>
+                    <span class="eyebrow">DATABASE RECORDS</span>
+                    <h2>Recent Submissions</h2>
+                    <p>Assignments successfully saved in the system.</p>
+                </div>
+
+                <button
+                    class="refresh-btn"
+                    onclick="loadSubmissions()"
+                >
+                    ↻ Refresh
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Registration</th>
+                            <th>Assignment</th>
+                            <th>Submission Link</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="submissionTable">
+                        <tr>
+                            <td colspan="6" class="empty">
+                                Loading submissions...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <footer>
+            <p>
+                Assignment Submission Portal |
+                DevOps Lab Mid | CSC418
+            </p>
+            <span>Developed by Zainab-zaini</span>
+        </footer>
+
+    </main>
+
+    <script src="/static/app.js"></script>
+
+</body>
+</html>
