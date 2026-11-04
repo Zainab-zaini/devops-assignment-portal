@@ -1,40 +1,56 @@
-# DevOps Assignment Submission Portal
+# Assignment Submission Portal — DevOps Lab Midterm
 
-A professional assignment submission portal developed for the CSC418 DevOps for Cloud Computing laboratory midterm at COMSATS University Islamabad, Attock Campus.
+**Course:** DevOps for Cloud Computing (CSC418)  
+**University:** COMSATS University Islamabad, Attock Campus
 
-## Features
+## 1. Project Overview
 
-- Student assignment submission.
-- Required-field validation.
-- Submission URL validation.
-- Persistent SQLite storage.
-- Display of saved submissions.
-- Automated testing with Pytest.
-- Continuous Integration using GitHub Actions.
-- Local HTTP test report receiver.
-- Automatic JSON test report generation.
+The Assignment Submission Portal is a FastAPI-based web application that allows students to submit assignments through GitHub or other submission URLs.
 
-## Technology Stack
+The project implements automated testing, Continuous Integration using GitHub Actions, and automatic delivery of JSON test reports to a local Windows computer.
 
-- Frontend: HTML, CSS, JavaScript
-- Backend: Python, FastAPI
-- Database: SQLite
-- Testing: Pytest, HTTPX
-- CI/CD: GitHub Actions
-- Reporting: Python HTTP server and JSON
+## 2. Technologies Used
 
-## Project Structure
+- Python 3.13
+- FastAPI
+- SQLite
+- Pytest
+- HTTPX
+- Git and GitHub
+- GitHub Actions
+- Windows Self-Hosted Runner
+- JSON reporting
+- Python HTTP Server
+
+## 3. Project Structure
 
 ```text
-app/                  Application backend
-app/static/           Frontend files
-tests/                Automated tests
-receiver/             Local report receiver
-.github/workflows/    CI pipeline
-requirements.txt      Dependencies
+devops-assignment-portal/
+│
+├── app/
+│   ├── main.py
+│   ├── database.py
+│   ├── schemas.py
+│   └── static/
+│       └── index.html
+│
+├── receiver/
+│   ├── receiver.py
+│   └── send_report.py
+│
+├── tests/
+│   └── test_submissions.py
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── requirements.txt
+├── .gitignore
+└── README.md
 ```
 
-## Installation
+## 4. Installation
 
 Clone the repository:
 
@@ -43,25 +59,13 @@ git clone https://github.com/Zainab-zaini/devops-assignment-portal.git
 cd devops-assignment-portal
 ```
 
-Create and activate a virtual environment:
-
-```bash
-python -m venv venv
-```
-
-Windows:
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
 Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run the Application
+## 5. Run the Application
 
 ```bash
 uvicorn app.main:app --reload
@@ -69,34 +73,93 @@ uvicorn app.main:app --reload
 
 Open:
 
-http://127.0.0.1:8000
+`http://127.0.0.1:8000`
 
 API documentation:
 
-http://127.0.0.1:8000/docs
+`http://127.0.0.1:8000/docs`
 
-## Execute Automated Tests
+## 6. Execute Automated Tests
 
 ```bash
 pytest -v
 ```
 
-## Start Local Report Receiver
+Generate JSON test results:
+
+```bash
+pytest -v --json-report --json-report-file=test-results.json
+```
+
+## 7. Start the Local Report Receiver
+
+Configure the authentication token in PowerShell:
+
+```powershell
+$env:REPORT_RECEIVER_TOKEN = "YOUR_SECRET_TOKEN"
+```
+
+Start the receiver:
 
 ```bash
 python receiver/receiver.py
 ```
 
-The receiver will save automatically received test results as `test-report.json`.
+The receiver listens on:
 
-## CI/CD
+`http://127.0.0.1:8765`
 
-GitHub Actions automatically executes the automated test suite after repository pushes.
+It automatically saves received reports as:
 
-## Author
+`test-report.json`
 
-GitHub: https://github.com/Zainab-zaini
+## 8. Continuous Integration
 
-Course: CSC418 – DevOps for Cloud Computing
+GitHub Actions automatically executes the test suite after every push.
 
-University: COMSATS University Islamabad, Attock Campus
+The self-hosted Windows runner executes the workflow on the developer's computer.
+
+The pipeline:
+1. Checks out the repository.
+2. Verifies Python.
+3. Installs dependencies.
+4. Executes automated tests.
+5. Generates JSON test results.
+6. Delivers the report to the local HTTP receiver.
+
+## 9. Automated Testing
+
+The project includes five automated test cases:
+
+1. Valid assignment submission.
+2. Missing registration number.
+3. Invalid submission URL.
+4. Application health check.
+5. Empty submission list.
+
+## 10. Failure Demonstration
+
+The CI pipeline is demonstrated through three revisions:
+
+- Successful execution with all tests passing.
+- Deliberate submission endpoint failure resulting in a failed test.
+- Correction of the defect followed by successful execution.
+
+The local JSON report is automatically updated after each run.
+
+## 11. Test Report Contents
+
+The generated report includes:
+
+- Repository name.
+- Branch name.
+- Commit SHA.
+- Pipeline run identifier.
+- Execution timestamp.
+- Individual test results.
+- Total, passed and failed test counts.
+- Overall pipeline status.
+
+## 12. Repository
+
+GitHub: https://github.com/Zainab-zaini/devops-assignment-portal
