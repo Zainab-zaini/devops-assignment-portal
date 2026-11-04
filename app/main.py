@@ -55,6 +55,10 @@ def health_check():
     status_code=201
 )
 def create_submission(submission: SubmissionCreate):
+    raise HTTPException(
+        status_code=500,
+        detail="Temporary failure for CI demonstration."
+    )
 
     connection = get_connection()
 
