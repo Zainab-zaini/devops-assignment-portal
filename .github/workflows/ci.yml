@@ -12,8 +12,8 @@ permissions:
 
 jobs:
   automated-tests:
-    name: Run Automated Tests
-    runs-on: ubuntu-latest
+    name: Run Tests and Deliver Report
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
@@ -23,7 +23,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
       - name: Install Dependencies
         run: |
@@ -31,14 +30,15 @@ jobs:
           pip install -r requirements.txt
 
       - name: Execute Pytest Suite
+        id: pytest
         run: |
           python -m pytest -v --json-report --json-report-file=test-results.json
 
-      - name: Upload Test Report
+      - name: Deliver Report to Local Computer
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-results-${{ github.run_id }}
-          path: test-results.json
-          if-no-files-found: warn
-          retention-days: 7
+        env:
+          REPORT_RECEIVER_URL: http://127.0.0.1:8765/report
+          REPORT_RECEIVER_TOKEN: ${{ secrets.REPORT_RECEIVER_TOKEN }}
+          TEST_STEP_OUTCOME: ${{ steps.pytest.outcome }}
+        run: |
+          python receiver/send_report.py
