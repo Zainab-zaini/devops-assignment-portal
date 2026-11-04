@@ -1,0 +1,13 @@
+{
+    "repository": "Zainab-zaini/devops-assignment-portal",
+    "branch": "main",
+    "commit_sha": "aafb863cf64f22ce7d5438fbcc063bfd3ed2bd23",
+    "pipeline_run_id": "41876779351",
+    "timestamp": "2026-11-04T18:07:16.902160+00:00",
+    "tests": [],
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "status": "FAILED"
+}
