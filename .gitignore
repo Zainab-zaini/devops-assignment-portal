@@ -30,3 +30,6 @@ Thumbs.db
 # Test and coverage reports
 .coverage
 htmlcov/
+ Generated test reports
+test-results.json
+test-results.xml
