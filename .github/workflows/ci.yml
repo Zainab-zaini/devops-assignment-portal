@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 jobs:
   automated-tests:
@@ -42,3 +44,29 @@ jobs:
           TEST_STEP_OUTCOME: ${{ steps.pytest.outcome }}
         run: |
           python receiver/send_report.py
+  deploy-pages:
+    name: Deploy Static Portal
+    needs: automated-tests
+    if: success() && github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Static Website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/static
+
+      - name: Deploy Website
+        id: deployment
+        uses: actions/deploy-pages@v4
