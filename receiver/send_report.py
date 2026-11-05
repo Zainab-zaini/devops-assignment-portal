@@ -58,25 +58,29 @@ report = {
     "status": status
 }
 
-url = os.environ["REPORT_RECEIVER_URL"]
-token = os.environ["REPORT_RECEIVER_TOKEN"]
-
+# Save local report
 (ROOT / "test-report.json").write_text(
     json.dumps(report, indent=4),
     encoding="utf-8"
 )
+print("Report saved successfully to test-report.json.")
 
-request = urllib.request.Request(
-    url,
-    data=json.dumps(report).encode("utf-8"),
-    headers={
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {token}"
-    },
-    method="POST"
-)
+# Only attempt to send via HTTP if receiver credentials are set
+url = os.getenv("REPORT_RECEIVER_URL")
+token = os.getenv("REPORT_RECEIVER_TOKEN")
 
-with urllib.request.urlopen(request, timeout=15) as response:
-    print(response.read().decode("utf-8"))
+if url and token:
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(report).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}"
+        },
+        method="POST"
+    )
+
+    with urllib.request.urlopen(request, timeout=15) as response:
+        print(response.read().decode("utf-8"))
 
 print(f"Report delivery status: {status}")
