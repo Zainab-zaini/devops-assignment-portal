@@ -61,6 +61,11 @@ report = {
 url = os.environ["REPORT_RECEIVER_URL"]
 token = os.environ["REPORT_RECEIVER_TOKEN"]
 
+(ROOT / "test-report.json").write_text(
+    json.dumps(report, indent=4),
+    encoding="utf-8"
+)
+
 request = urllib.request.Request(
     url,
     data=json.dumps(report).encode("utf-8"),
